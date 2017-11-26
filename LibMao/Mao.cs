@@ -12,6 +12,8 @@ namespace Mao
         public List<Card> DiscardPile;
         public Card ActiveCard;
 
+        private List<Rule> rules;
+
         private List<Card> cards;
 
         public Mao()
@@ -20,6 +22,7 @@ namespace Mao
             DiscardPile = new List<Card>();
             cards = new List<Card>();
             cards.AddRange(new Deck().Cards);
+            rules = new List<Rule>();
         }
 
         public void AddPlayer(String name)
@@ -38,19 +41,25 @@ namespace Mao
             for(int i = 0; i < Players.Count; i++)
             {
                 for(int c = 0; c < 7; c++)
-                {
-                    Card card = cards[0];
-                    cards.RemoveAt(0);
-                    Players[i].giveCard(card);
+                {  
+                    Players[i].giveCard(DrawCard());
                 }
             }
 
-            ActiveCard = cards[0];
-            cards.RemoveAt(0);
+            ActiveCard = DrawCard();
         }
 
-        public void PlayCard(Card c)
+        public Card DrawCard()
         {
+            Card card = cards[0];
+            cards.RemoveAt(0);
+            return card;
+        }
+
+        public List<Card> PlayCard(Card c)
+        {
+            List<Card> penalty = new List<Card>();
+
             DiscardPile.Add(ActiveCard);
             if(cards.Count == 0)
             {
@@ -59,6 +68,8 @@ namespace Mao
                 DiscardPile.Clear();
             }
             ActiveCard = c;
+
+            return penalty;
         }
     }
 }

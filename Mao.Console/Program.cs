@@ -43,7 +43,7 @@ namespace Mao.Text
 
                 Card c = game.Players[0].Hand[card];
                 game.Players[0].Hand.RemoveAt(card);
-                game.PlayCard(c);
+                game.Players[0].Hand.AddRange(game.PlayCard(c));
 
             }
             
