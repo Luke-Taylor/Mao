@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LibMao
+namespace Mao
 {
     public class Player
     {
@@ -16,6 +16,7 @@ namespace LibMao
         {
             Name = name;
             Score = score;
+            Hand = new List<Card>();
         }
 
         public void giveCard(Card c)

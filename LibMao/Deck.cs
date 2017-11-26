@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LibMao
+namespace Mao
 {
     public class Deck
     {
@@ -22,15 +22,15 @@ namespace LibMao
             }
         }
 
-        public void Shuffle()
+        public static void Shuffle(List<Card> cards)
         {
             Random r = new Random();
-            for(int i = Cards.Count - 1; i > 0; i--)
+            for(int i = cards.Count - 1; i > 0; i--)
             {
                 int target = r.Next(i + 1);
-                Card tmp = Cards[i];
-                Cards[i] = Cards[target];
-                Cards[target] = tmp;
+                Card tmp = cards[i];
+                cards[i] = cards[target];
+                cards[target] = tmp;
             }
         }
     }

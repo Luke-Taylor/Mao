@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LibMao
+namespace Mao
 {
     public enum Suit
     {
@@ -40,6 +40,11 @@ namespace LibMao
         {
             Suit = s;
             Value = v;
+        }
+
+        public override string ToString()
+        {
+            return $"{Value} of {Suit}";
         }
     }
 }
