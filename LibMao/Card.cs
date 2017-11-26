@@ -33,13 +33,13 @@ namespace LibMao
 
     public class Card
     {
+        public Suit Suit;
+        public CardValue Value;
+
         public Card(Suit s, CardValue v)
         {
             Suit = s;
             Value = v;
         }
-
-        public Suit Suit;
-        public CardValue Value;
     }
 }
