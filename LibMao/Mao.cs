@@ -9,12 +9,15 @@ namespace Mao
     public class Mao
     {
         public List<Player> Players;
+        public List<Card> DiscardPile;
+        public Card ActiveCard;
 
         private List<Card> cards;
 
         public Mao()
         {
             Players = new List<Player>();
+            DiscardPile = new List<Card>();
             cards = new List<Card>();
             cards.AddRange(new Deck().Cards);
         }
@@ -41,6 +44,21 @@ namespace Mao
                     Players[i].giveCard(card);
                 }
             }
+
+            ActiveCard = cards[0];
+            cards.RemoveAt(0);
+        }
+
+        public void PlayCard(Card c)
+        {
+            DiscardPile.Add(ActiveCard);
+            if(cards.Count == 0)
+            {
+                DiscardPile.Reverse();
+                cards = DiscardPile;
+                DiscardPile.Clear();
+            }
+            ActiveCard = c;
         }
     }
 }

@@ -27,16 +27,25 @@ namespace Mao.Text
 
             game.Deal();
 
-            foreach(Player p in game.Players)
+            while (true)
             {
-                Console.WriteLine($"{p.Name}'s hand:");
-                foreach(Card c in p.Hand)
-                {
-                    Console.WriteLine(c);
-                }
-            }
 
-            while (true) ;
+                Console.WriteLine($"The starting card is {game.ActiveCard}");
+
+                Console.WriteLine("Which card would you like to play?");
+
+                for (int i = 0; i < game.Players[0].Hand.Count; i++)
+                {
+                    Console.WriteLine($"[{i}]: {game.Players[0].Hand[i]}");
+                }
+
+                int card = int.Parse(Console.ReadLine());
+
+                Card c = game.Players[0].Hand[card];
+                game.Players[0].Hand.RemoveAt(card);
+                game.PlayCard(c);
+
+            }
             
         }
     }
