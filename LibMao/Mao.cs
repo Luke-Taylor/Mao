@@ -12,7 +12,7 @@ namespace Mao
         public List<Card> DiscardPile;
         public Card ActiveCard;
 
-        private List<Rule> rules;
+        private List<IRule> rules;
 
         private List<Card> cards;
 
@@ -22,7 +22,8 @@ namespace Mao
             DiscardPile = new List<Card>();
             cards = new List<Card>();
             cards.AddRange(new Deck().Cards);
-            rules = new List<Rule>();
+            rules = new List<IRule>();
+            rules.Add(new BaseRule());
         }
 
         public void AddPlayer(String name)
@@ -56,9 +57,18 @@ namespace Mao
             return card;
         }
 
-        public List<Card> PlayCard(Card c)
+        public List<PenaltyItem> PlayCard(Card c)
         {
-            List<Card> penalty = new List<Card>();
+            List<PenaltyItem> penalty = new List<PenaltyItem>();
+
+            foreach (var rule in rules)
+            {
+                var response = rule.Evaluate(ActiveCard, c);
+                if (response.Response == RuleResponse.ResponseType.Illegal)
+                {
+                    penalty.Add(new PenaltyItem(response.Message,DrawCard()));
+                }
+            }
 
             DiscardPile.Add(ActiveCard);
             if(cards.Count == 0)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Mao.Text
 {
@@ -43,7 +44,21 @@ namespace Mao.Text
 
                 Card c = game.Players[0].Hand[card];
                 game.Players[0].Hand.RemoveAt(card);
-                game.Players[0].Hand.AddRange(game.PlayCard(c));
+
+                var penalties = game.PlayCard(c);
+
+                if (penalties.Count == 0)
+                {
+                    Console.WriteLine("Valid move");
+                }
+                else
+                {
+                    foreach (var penalty in penalties)
+                    {
+                        Console.WriteLine(penalty.Reason);
+                        game.Players[0].Hand.Add(penalty.Penalty);
+                    }
+                }
 
             }
             

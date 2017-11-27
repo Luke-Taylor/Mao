@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Mao
 {
-    public interface Rule
+    
+    public interface IRule
     {
-        bool Evaluate(Card active, Card played);
+        RuleResponse Evaluate(Card active, Card played);
     }
 }
