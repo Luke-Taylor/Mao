@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
+using System.Net;
 
 namespace Mao.Text
 {
-    class Program
+    internal class Program
     {
-        static Mao game;
+        private static Mao game;
 
-        static void GetPlayers()
+        private static void GetPlayers()
         {
             Console.WriteLine("How many players?");
             int players = int.Parse(Console.ReadLine());
@@ -19,9 +20,33 @@ namespace Mao.Text
             }
         }
 
-        static void Main(string[] args)
+        private static int GetCard(int currentPlayer)
         {
+            Console.WriteLine("Which card would you like to play?");
+
+            for (int i = 0; i < game.Players[currentPlayer].Hand.Count; i++)
+            {
+                Console.WriteLine($"[{i}]: {game.Players[currentPlayer].Hand[i]}");
+            }
+
+            return int.Parse(Console.ReadLine());
+        }
+
+        private static List<PenaltyItem> PlayCard(int currentPlayer, int card)
+        {
+            Card c = game.Players[currentPlayer].Hand[card];
+            game.Players[currentPlayer].Hand.RemoveAt(card);
+
+            return game.PlayCard(c);
+        }
+
+        private static void Main(string[] args)
+        {
+            int currentPlayer = 0;
+            bool reverse = false;
             game = new Mao();
+
+            game.AddRule(new CustomRule("", RuleResponse.ResponseType.Reverse, RuleResponse.ResponseType.Legal, CustomRule.MatchType.Card, new Card(Suit.Clubs, CardValue.Eight)));
 
             Console.WriteLine("Welcome to Mao");
             GetPlayers();
@@ -30,38 +55,43 @@ namespace Mao.Text
 
             while (true)
             {
+                Console.WriteLine($"{game.Players[currentPlayer].Name}'s turn:");
+                Console.WriteLine($"The active card is {game.ActiveCard}");
 
-                Console.WriteLine($"The starting card is {game.ActiveCard}");
+                var card = GetCard(currentPlayer);
 
-                Console.WriteLine("Which card would you like to play?");
+                var outcome = PlayCard(currentPlayer, card);
 
-                for (int i = 0; i < game.Players[0].Hand.Count; i++)
+                foreach (var response in outcome)
                 {
-                    Console.WriteLine($"[{i}]: {game.Players[0].Hand[i]}");
-                }
-
-                int card = int.Parse(Console.ReadLine());
-
-                Card c = game.Players[0].Hand[card];
-                game.Players[0].Hand.RemoveAt(card);
-
-                var penalties = game.PlayCard(c);
-
-                if (penalties.Count == 0)
-                {
-                    Console.WriteLine("Valid move");
-                }
-                else
-                {
-                    foreach (var penalty in penalties)
+                    Console.WriteLine(response.Reason);
+                    if (response.Response == RuleResponse.ResponseType.Reverse)
                     {
-                        Console.WriteLine(penalty.Reason);
-                        game.Players[0].Hand.Add(penalty.Penalty);
+                        reverse = !reverse;
+                    }
+                    if (response.Penalty != null)
+                    {
+                        game.Players[currentPlayer].Hand.Add(response.Penalty);
                     }
                 }
 
+                if (reverse)
+                {
+                    currentPlayer--;
+                    if (currentPlayer < 0)
+                    {
+                        currentPlayer = game.Players.Count - 1;
+                    }
+                }
+                else
+                {
+                    currentPlayer++;
+                    if (currentPlayer == game.Players.Count)
+                    {
+                        currentPlayer = 0;
+                    }
+                }
             }
-            
         }
     }
 }

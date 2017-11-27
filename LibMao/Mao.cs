@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -57,17 +58,25 @@ namespace Mao
             return card;
         }
 
+        public void AddRule(IRule rule)
+        {
+            rules.Add(rule);
+        }
+
         public List<PenaltyItem> PlayCard(Card c)
         {
-            List<PenaltyItem> penalty = new List<PenaltyItem>();
+            List<PenaltyItem> penalties = new List<PenaltyItem>();
 
             foreach (var rule in rules)
             {
                 var response = rule.Evaluate(ActiveCard, c);
+                Card penalty = null;
                 if (response.Response == RuleResponse.ResponseType.Illegal)
                 {
-                    penalty.Add(new PenaltyItem(response.Message,DrawCard()));
+                    penalty = DrawCard();
                 }
+
+                penalties.Add(new PenaltyItem(response.Message, penalty, response.Response));
             }
 
             DiscardPile.Add(ActiveCard);
@@ -79,7 +88,7 @@ namespace Mao
             }
             ActiveCard = c;
 
-            return penalty;
+            return penalties;
         }
     }
 }

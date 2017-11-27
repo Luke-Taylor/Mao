@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="BaseRule.cs" />
     <Compile Include="Card.cs" />
+    <Compile Include="CustomRule.cs" />
     <Compile Include="Deck.cs" />
     <Compile Include="Mao.cs" />
     <Compile Include="PenaltyItem.cs" />
